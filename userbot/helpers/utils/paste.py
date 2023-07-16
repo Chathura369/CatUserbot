@@ -1,3 +1,12 @@
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# CatUserBot #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+# Copyright (C) 2020-2023 by TgCatUB@Github.
+
+# This file is part of: https://github.com/TgCatUB/catuserbot
+# and is released under the "GNU v3.0 License Agreement".
+
+# Please see: https://github.com/TgCatUB/catuserbot/blob/master/LICENSE
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+
 import json
 
 import requests
@@ -48,6 +57,29 @@ async def p_paste(message, extension=None):
 
 
 async def s_paste(message, extension="txt"):
+    """
+    To Paste the given message/text/code to spaceb.in
+    """
+    siteurl = "https://spaceb.in/api/v1/documents/"
+    try:
+        response = requests.post(
+            siteurl, data={"content": message, "extension": extension}
+        )
+    except Exception as e:
+        return {"error": str(e)}
+    if response.ok:
+        response = response.json()
+        if response["error"] != "" and response["status"] < 400:
+            return {"error": response["error"]}
+        return {
+            "url": f"https://spaceb.in/{response['payload']['id']}",
+            "raw": f"{siteurl}{response['payload']['id']}/raw",
+            "bin": "Spacebin",
+        }
+    return {"error": "Unable to reach spacebin."}
+
+
+def spaste(message, extension="txt"):
     """
     To Paste the given message/text/code to spaceb.in
     """

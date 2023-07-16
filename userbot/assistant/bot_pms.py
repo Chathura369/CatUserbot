@@ -1,3 +1,12 @@
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# CatUserBot #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+# Copyright (C) 2020-2023 by TgCatUB@Github.
+
+# This file is part of: https://github.com/TgCatUB/catuserbot
+# and is released under the "GNU v3.0 License Agreement".
+
+# Please see: https://github.com/TgCatUB/catuserbot/blob/master/LICENSE
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+
 import re
 from collections import defaultdict
 from datetime import datetime
@@ -69,7 +78,7 @@ async def check_bot_started_users(user, event):
     incoming=True,
     func=lambda e: e.is_private,
 )
-async def bot_start(event):
+async def bot_start(event):  # sourcery skip: low-code-quality
     chat = await event.get_chat()
     user = await catub.get_me()
     if check_is_black_list(chat.id):
@@ -86,6 +95,7 @@ async def bot_start(event):
     my_last = user.last_name
     my_fullname = f"{my_first} {my_last}" if my_last else my_first
     my_username = f"@{user.username}" if user.username else my_mention
+    custompic = gvarstatus("BOT_START_PIC") or None
     if chat.id != Config.OWNER_ID:
         customstrmsg = gvarstatus("START_TEXT") or None
         if customstrmsg is not None:
@@ -109,10 +119,10 @@ async def bot_start(event):
                         \n\nPowered by [Catuserbot](https://t.me/catuserbot)"
         buttons = [
             (
-                Button.url("Repo", "https://github.com/Sur-vivor/CatUserbot"),
+                Button.url("Repo", "https://github.com/TgCatUB/catuserbot"),
                 Button.url(
                     "Deploy",
-                    "https://dashboard.heroku.com/new?button-url=https%3A%2F%2Fgithub.com%2FSur-vivor%2Fnekopack&template=https%3A%2F%2Fgithub.com%2FSur-vivor%2Fnekopack",
+                    "https://github.com/TgCatUB/nekopack",
                 ),
             )
         ]
@@ -121,26 +131,37 @@ async def bot_start(event):
             \nHow can i help you ?"
         buttons = None
     try:
-        await event.client.send_message(
-            chat.id,
-            start_msg,
-            link_preview=False,
-            buttons=buttons,
-            reply_to=reply_to,
-        )
+        if custompic:
+            await event.client.send_file(
+                chat.id,
+                file=custompic,
+                caption=start_msg,
+                link_preview=False,
+                buttons=buttons,
+                reply_to=reply_to,
+            )
+        else:
+            await event.client.send_message(
+                chat.id,
+                start_msg,
+                link_preview=False,
+                buttons=buttons,
+                reply_to=reply_to,
+            )
     except Exception as e:
         if BOTLOG:
             await event.client.send_message(
                 BOTLOG_CHATID,
-                f"**Error**\nThere was a error while user starting your bot.\
-                \n`{str(e)}`",
+                f"**Error**\nThere was a error while user starting your bot.\\\x1f                \n`{e}`",
             )
+
     else:
         await check_bot_started_users(chat, event)
 
 
 @catub.bot_cmd(incoming=True, func=lambda e: e.is_private)
 async def bot_pms(event):  # sourcery no-metrics
+    # sourcery skip: low-code-quality
     chat = await event.get_chat()
     if check_is_black_list(chat.id):
         return
@@ -182,7 +203,7 @@ async def bot_pms(event):  # sourcery no-metrics
             except UserIsBlockedError:
                 return await event.reply("𝗧𝗵𝗶𝘀 𝗯𝗼𝘁 𝘄𝗮𝘀 𝗯𝗹𝗼𝗰𝗸𝗲𝗱 𝗯𝘆 𝘁𝗵𝗲 𝘂𝘀𝗲𝗿. ❌")
             except Exception as e:
-                return await event.reply(f"**Error:**\n`{str(e)}`")
+                return await event.reply(f"**Error:**\n`{e}`")
             try:
                 add_user_to_db(
                     reply_to, user_name, user_id, reply_msg, event.id, msg.id
@@ -192,7 +213,7 @@ async def bot_pms(event):  # sourcery no-metrics
                 if BOTLOG:
                     await event.client.send_message(
                         BOTLOG_CHATID,
-                        f"**Error**\nWhile storing messages details in database\n`{str(e)}`",
+                        f"**Error**\nWhile storing messages details in database\n`{e}`",
                     )
 
 
@@ -205,12 +226,10 @@ async def bot_pms_edit(event):  # sourcery no-metrics
         users = get_user_reply(event.id)
         if users is None:
             return
-        reply_msg = None
-        for user in users:
-            if user.chat_id == str(chat.id):
-                reply_msg = user.message_id
-                break
-        if reply_msg:
+        if reply_msg := next(
+            (user.message_id for user in users if user.chat_id == str(chat.id)),
+            None,
+        ):
             await event.client.send_message(
                 Config.OWNER_ID,
                 f"⬆️ **This message was edited by the user** {_format.mentionuser(get_display_name(chat) , chat.id)} as :",
@@ -224,8 +243,9 @@ async def bot_pms_edit(event):  # sourcery no-metrics
                 if BOTLOG:
                     await event.client.send_message(
                         BOTLOG_CHATID,
-                        f"**Error**\nWhile storing messages details in database\n`{str(e)}`",
+                        f"**Error**\nWhile storing messages details in database\n`{e}`",
                     )
+
     else:
         reply_to = await reply_id(event)
         if reply_to is not None:
@@ -266,11 +286,15 @@ async def handler(event):
                 except Exception as e:
                     LOGS.error(str(e))
         if users_1 is not None:
-            reply_msg = None
-            for user in users_1:
-                if user.chat_id != Config.OWNER_ID:
-                    reply_msg = user.message_id
-                    break
+            reply_msg = next(
+                (
+                    user.message_id
+                    for user in users_1
+                    if user.chat_id != Config.OWNER_ID
+                ),
+                None,
+            )
+
             try:
                 if reply_msg:
                     users = get_user_id(reply_msg)
@@ -289,10 +313,7 @@ async def handler(event):
                 LOGS.error(str(e))
 
 
-@catub.bot_cmd(
-    pattern=f"^/uinfo$",
-    from_users=Config.OWNER_ID,
-)
+@catub.bot_cmd(pattern="^/uinfo$", from_users=Config.OWNER_ID)
 async def bot_start(event):
     reply_to = await reply_id(event)
     if not reply_to:
@@ -321,7 +342,7 @@ async def bot_start(event):
     await info_msg.edit(uinfo)
 
 
-async def send_flood_alert(user_) -> None:
+async def send_flood_alert(user_) -> None:  # sourcery skip: low-code-quality
     # sourcery no-metrics
     buttons = [
         (
@@ -343,8 +364,10 @@ async def send_flood_alert(user_) -> None:
         except Exception as e:
             if BOTLOG:
                 await catub.tgbot.send_message(
-                    BOTLOG_CHATID, f"**Error:**\nWhile updating flood count\n`{str(e)}`"
+                    BOTLOG_CHATID,
+                    f"**Error:**\nWhile updating flood count\n`{e}`",
                 )
+
         flood_count = FloodConfig.ALERT[user_.id]["count"]
     else:
         flood_count = FloodConfig.ALERT[user_.id]["count"] = 1
@@ -414,7 +437,7 @@ async def bot_pm_ban_cb(c_q: CallbackQuery):
     try:
         user = await catub.get_entity(user_id)
     except Exception as e:
-        await c_q.answer(f"Error:\n{str(e)}")
+        await c_q.answer(f"Error:\n{e}")
     else:
         await c_q.answer(f"Banning UserID -> {user_id} ...", alert=False)
         await ban_user_from_bot(user, "Spamming Bot")
@@ -453,9 +476,9 @@ def is_flood(uid: int) -> Optional[bool]:
 @check_owner
 async def settings_toggle(c_q: CallbackQuery):
     if gvarstatus("bot_antif") is None:
-        return await c_q.answer(f"Bot Antiflood was already disabled.", alert=False)
+        return await c_q.answer("Bot Antiflood was already disabled.", alert=False)
     delgvar("bot_antif")
-    await c_q.answer(f"Bot Antiflood disabled.", alert=False)
+    await c_q.answer("Bot Antiflood disabled.", alert=False)
     await c_q.edit("BOT_ANTIFLOOD is now disabled !")
 
 

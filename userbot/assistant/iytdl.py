@@ -1,4 +1,14 @@
 """ Download Youtube Video / Audio in a User friendly interface """
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# CatUserBot #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+# Copyright (C) 2020-2023 by TgCatUB@Github.
+
+# This file is part of: https://github.com/TgCatUB/catuserbot
+# and is released under the "GNU v3.0 License Agreement".
+
+# Please see: https://github.com/TgCatUB/catuserbot/blob/master/LICENSE
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+
 # --------------------------- #
 #   Modded ytdl by code-rgb   #
 # --------------------------- #
@@ -143,7 +153,7 @@ async def ytdl_download_callback(c_q: CallbackQuery):  # sourcery no-metrics
     if not _fpath:
         await edit_delete(upload_msg, "nothing found !")
         return
-    if not thumb_pic and downtype == "v":
+    if not thumb_pic:
         thumb_pic = str(await pool.run_in_thread(download)(await get_ytthumb(yt_code)))
     attributes, mime_type = get_attributes(str(_fpath))
     ul = io.open(Path(_fpath), "rb")

@@ -16,20 +16,13 @@ from telethon.events import CallbackQuery
 from userbot import catub
 
 
-@catub.tgbot.on(CallbackQuery(data=re.compile(b"secret_(.*)")))
+@catub.tgbot.on(CallbackQuery(data=re.compile(b"hide_(.*)")))
 async def on_plug_in_callback_query_handler(event):
     timestamp = int(event.pattern_match.group(1).decode("UTF-8"))
-    if os.path.exists("./userbot/secret.txt"):
-        jsondata = json.load(open("./userbot/secret.txt"))
+    if os.path.exists("./userbot/hide.txt"):
+        jsondata = json.load(open("./userbot/hide.txt"))
         try:
-            message = jsondata[f"{timestamp}"]
-            userid = message["userid"]
-            ids = userid + [catub.uid]
-            if event.query.user_id in ids:
-                encrypted_tcxt = message["text"]
-                reply_pop_up_alert = encrypted_tcxt
-            else:
-                reply_pop_up_alert = "why were you looking at this shit go away and do your own work, idiot"
+            reply_pop_up_alert = jsondata[f"{timestamp}"]["text"]
         except KeyError:
             reply_pop_up_alert = "This message no longer exists in catub server"
     else:
