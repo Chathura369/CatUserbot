@@ -47,8 +47,8 @@ async def psu(event):
     softw += f"`Boot Time: {bt.day}/{bt.month}/{bt.year}  {bt.hour}:{bt.minute}:{bt.second}`\n"
     # CPU Cores
     cpuu = "**CPU Info**\n"
-    cpuu += "`Physical cores   : " + str(psutil.cpu_count(logical=False)) + "`\n"
-    cpuu += "`Total cores      : " + str(psutil.cpu_count(logical=True)) + "`\n"
+    cpuu += f"`Physical cores   : {str(psutil.cpu_count(logical=False))}" + "`\n"
+    cpuu += f"`Total cores      : {str(psutil.cpu_count(logical=True))}" + "`\n"
     # CPU frequencies
     cpufreq = psutil.cpu_freq()
     cpuu += f"`Max Frequency    : {cpufreq.max:.2f}Mhz`\n"
@@ -71,10 +71,10 @@ async def psu(event):
     bw = "**Bandwith Usage**\n"
     bw += f"`Upload  : {get_size(psutil.net_io_counters().bytes_sent)}`\n"
     bw += f"`Download: {get_size(psutil.net_io_counters().bytes_recv)}`\n"
-    help_string = f"{str(softw)}\n"
-    help_string += f"{str(cpuu)}\n"
-    help_string += f"{str(memm)}\n"
-    help_string += f"{str(bw)}\n"
+    help_string = f"{softw}\n"
+    help_string += f"{cpuu}\n"
+    help_string += f"{memm}\n"
+    help_string += f"{bw}\n"
     help_string += "**Engine Info**\n"
     help_string += f"`Python {sys.version}`\n"
     help_string += f"`Telethon {__version__}`"
@@ -108,11 +108,11 @@ async def cpu(event):
 )
 async def sysdetails(sysd):
     "Shows system information using neofetch"
-    catevent = await edit_or_reply(sysd, "`Fectching system information.`")
+    catevent = await edit_or_reply(sysd, "`Fetching system information.`")
     cmd = "git clone https://github.com/dylanaraps/neofetch.git"
     await _catutils.runcmd(cmd)
     neo = "neofetch/neofetch --off --color_blocks off --bold off --cpu_temp C \
                     --cpu_speed on --cpu_cores physical --kernel_shorthand off --stdout"
     a, b, c, d = await _catutils.runcmd(neo)
     result = str(a) + str(b)
-    await edit_or_reply(catevent, "**Neofetch Result:** `" + result + "`")
+    await edit_or_reply(catevent, f"**Neofetch Result:** `{result}`")

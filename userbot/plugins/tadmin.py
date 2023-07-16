@@ -1,11 +1,17 @@
-"""
-idea from lynda and rose bot
-made by @mrconfused
-"""
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# CatUserBot #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+# Copyright (C) 2020-2023 by TgCatUB@Github.
+
+# This file is part of: https://github.com/TgCatUB/catuserbot
+# and is released under the "GNU v3.0 License Agreement".
+
+# Please see: https://github.com/TgCatUB/catuserbot/blob/master/LICENSE
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+
 from telethon.errors import BadRequestError
 from telethon.errors.rpcerrorlist import UserAdminInvalidError, UserIdInvalidError
 from telethon.tl.functions.channels import EditBannedRequest
 from telethon.tl.types import ChatBannedRights
+from telethon.utils import get_display_name
 
 from userbot import catub
 
@@ -58,7 +64,7 @@ async def tmuter(event):  # sourcery no-metrics
     if not ctime:
         return
     if user.id == event.client.uid:
-        return await catevent.edit(f"Sorry, I can't mute myself")
+        return await catevent.edit("Sorry, I can't mute myself")
     try:
         await catevent.client(
             EditBannedRequest(
@@ -70,7 +76,7 @@ async def tmuter(event):  # sourcery no-metrics
         # Announce that the function is done
         if reason:
             await catevent.edit(
-                f"{_format.mentionuser(user.first_name ,user.id)} was muted in {event.chat.title}\n"
+                f"{_format.mentionuser(user.first_name ,user.id)} was muted in {get_display_name(await event.get_chat())}\n"
                 f"**Muted for : **{cattime}\n"
                 f"**Reason : **__{reason}__"
             )
@@ -79,13 +85,13 @@ async def tmuter(event):  # sourcery no-metrics
                     BOTLOG_CHATID,
                     "#TMUTE\n"
                     f"**User : **[{user.first_name}](tg://user?id={user.id})\n"
-                    f"**Chat : **{event.chat.title}(`{event.chat_id}`)\n"
+                    f"**Chat : **{get_display_name(await event.get_chat())}(`{event.chat_id}`)\n"
                     f"**Muted for : **`{cattime}`\n"
                     f"**Reason : **`{reason}``",
                 )
         else:
             await catevent.edit(
-                f"{_format.mentionuser(user.first_name ,user.id)} was muted in {event.chat.title}\n"
+                f"{_format.mentionuser(user.first_name ,user.id)} was muted in {get_display_name(await event.get_chat())}\n"
                 f"Muted for {cattime}\n"
             )
             if BOTLOG:
@@ -93,7 +99,7 @@ async def tmuter(event):  # sourcery no-metrics
                     BOTLOG_CHATID,
                     "#TMUTE\n"
                     f"**User : **[{user.first_name}](tg://user?id={user.id})\n"
-                    f"**Chat : **{event.chat.title}(`{event.chat_id}`)\n"
+                    f"**Chat : **{get_display_name(await event.get_chat())}(`{event.chat_id}`)\n"
                     f"**Muted for : **`{cattime}`",
                 )
         # Announce to logging group
@@ -104,7 +110,7 @@ async def tmuter(event):  # sourcery no-metrics
             "`Either you're not an admin or you tried to mute an admin that you didn't promote`"
         )
     except Exception as e:
-        return await catevent.edit(f"`{str(e)}`")
+        return await catevent.edit(f"`{e}`")
 
 
 @catub.cat_cmd(
@@ -145,7 +151,7 @@ async def tban(event):  # sourcery no-metrics
     if not ctime:
         return
     if user.id == event.client.uid:
-        return await catevent.edit(f"Sorry, I can't ban myself")
+        return await catevent.edit("Sorry, I can't ban myself")
     await catevent.edit("`Whacking the pest!`")
     try:
         await event.client(
@@ -175,7 +181,7 @@ async def tban(event):  # sourcery no-metrics
     # Shout out the ID, so that fedadmins can fban later
     if reason:
         await catevent.edit(
-            f"{_format.mentionuser(user.first_name ,user.id)} was banned in {event.chat.title}\n"
+            f"{_format.mentionuser(user.first_name ,user.id)} was banned in {get_display_name(await event.get_chat())}\n"
             f"banned for {cattime}\n"
             f"Reason:`{reason}`"
         )
@@ -184,13 +190,13 @@ async def tban(event):  # sourcery no-metrics
                 BOTLOG_CHATID,
                 "#TBAN\n"
                 f"**User : **[{user.first_name}](tg://user?id={user.id})\n"
-                f"**Chat : **{event.chat.title}(`{event.chat_id}`)\n"
+                f"**Chat : **{get_display_name(await event.get_chat())}(`{event.chat_id}`)\n"
                 f"**Banned untill : **`{cattime}`\n"
                 f"**Reason : **__{reason}__",
             )
     else:
         await catevent.edit(
-            f"{_format.mentionuser(user.first_name ,user.id)} was banned in {event.chat.title}\n"
+            f"{_format.mentionuser(user.first_name ,user.id)} was banned in {get_display_name(await event.get_chat())}\n"
             f"banned for {cattime}\n"
         )
         if BOTLOG:
@@ -198,6 +204,6 @@ async def tban(event):  # sourcery no-metrics
                 BOTLOG_CHATID,
                 "#TBAN\n"
                 f"**User : **[{user.first_name}](tg://user?id={user.id})\n"
-                f"**Chat : **{event.chat.title}(`{event.chat_id}`)\n"
+                f"**Chat : **{get_display_name(await event.get_chat())}(`{event.chat_id}`)\n"
                 f"**Banned untill : **`{cattime}`",
             )
