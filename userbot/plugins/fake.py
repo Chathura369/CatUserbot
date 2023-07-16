@@ -1,3 +1,12 @@
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# CatUserBot #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+# Copyright (C) 2020-2023 by TgCatUB@Github.
+
+# This file is part of: https://github.com/TgCatUB/catuserbot
+# and is released under the "GNU v3.0 License Agreement".
+
+# Please see: https://github.com/TgCatUB/catuserbot/blob/master/LICENSE
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+
 import asyncio
 from random import choice, randint
 
@@ -64,11 +73,13 @@ async def _(event):
             scam_action = choice(options)
             scam_time = int(args[0])
     elif len(args) == 2:
-        scam_action = str(args[0]).lower()
-        scam_time = int(args[1])
+        try:
+            scam_action = str(args[0]).lower()
+            scam_time = int(args[1])
+        except ValueError:
+            return await edit_delete(event, "`Invalid Syntax !!`")
     else:
-        await edit_delete(event, "`Invalid Syntax !!`")
-        return
+        return await edit_delete(event, "`Invalid Syntax !!`")
     try:
         if scam_time > 0:
             await event.delete()
@@ -94,7 +105,7 @@ async def _(event):
 )
 async def _(event):
     "To promote a person without admin rights"
-    new_rights = ChatAdminRights(post_messages=True)
+    new_rights = ChatAdminRights(other=True)
     catevent = await edit_or_reply(event, "`Promoting...`")
     user, rank = await get_user_from_event(event, catevent)
     if not rank:
@@ -104,9 +115,9 @@ async def _(event):
     try:
         await event.client(EditAdminRequest(event.chat_id, user.id, new_rights, rank))
     except BadRequestError:
-        return await catevent.edit(NO_PERM)
+        return await catevent.edit("__I think you don't have permission to promote__")
     except Exception as e:
-        return await edit_delete(catevent, f"__{str(e)}__", time=10)
+        return await edit_delete(catevent, f"__{e}__", time=10)
     await catevent.edit("`Promoted Successfully! Now gib Party`")
 
 

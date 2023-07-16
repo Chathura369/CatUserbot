@@ -1,3 +1,12 @@
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# CatUserBot #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+# Copyright (C) 2020-2023 by TgCatUB@Github.
+
+# This file is part of: https://github.com/TgCatUB/catuserbot
+# and is released under the "GNU v3.0 License Agreement".
+
+# Please see: https://github.com/TgCatUB/catuserbot/blob/master/LICENSE
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+
 import asyncio
 import base64
 import os
@@ -77,7 +86,7 @@ async def endecrypt(event):
             reply = await event.get_reply_message()
             if not reply:
                 return await edit_delete(event, "`What should i encode`")
-            mediatype = media_type(reply)
+            mediatype = await media_type(reply)
             if mediatype is None:
                 result = base64.b64encode(bytes(reply.text, "utf-8")).decode("utf-8")
                 result = f"**Shhh! It's Encoded : **\n`{result}`"
@@ -107,4 +116,4 @@ async def endecrypt(event):
             )[2:]
             await edit_or_reply(event, "**Decoded text :**\n`" + lething[:-1] + "`")
         except Exception as e:
-            await edit_delete(event, f"**Error:**\n__{str(e)}__")
+            await edit_delete(event, f"**Error:**\n__{e}__")

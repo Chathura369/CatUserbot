@@ -1,3 +1,12 @@
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# CatUserBot #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+# Copyright (C) 2020-2023 by TgCatUB@Github.
+
+# This file is part of: https://github.com/TgCatUB/catuserbot
+# and is released under the "GNU v3.0 License Agreement".
+
+# Please see: https://github.com/TgCatUB/catuserbot/blob/master/LICENSE
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+
 from telethon.tl import functions
 
 from .. import catub
@@ -72,7 +81,7 @@ async def _(event):
                 f"Channel `{group_name}` created successfully. Join {result.link}",
             )
         except Exception as e:
-            await edit_delete(event, f"**Error:**\n{str(e)}")
+            await edit_delete(event, f"**Error:**\n{e}")
     elif type_of_group == "b":
         answer = await create_supergroup(
             group_name, event.client, Config.TG_BOT_USERNAME, descript
@@ -83,6 +92,6 @@ async def _(event):
                 f"Mega group `{group_name}` created successfully. Join {answer[0].link}",
             )
         else:
-            await edit_delete(event, f"**Error:**\n{str(answer[1])}")
+            await edit_delete(event, f"**Error:**\n{answer[1]}")
     else:
         await edit_delete(event, "Read `.help create` to know how to use me")

@@ -1,3 +1,12 @@
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# CatUserBot #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+# Copyright (C) 2020-2023 by TgCatUB@Github.
+
+# This file is part of: https://github.com/TgCatUB/catuserbot
+# and is released under the "GNU v3.0 License Agreement".
+
+# Please see: https://github.com/TgCatUB/catuserbot/blob/master/LICENSE
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+
 import asyncio
 
 from telethon.tl.functions.channels import EditBannedRequest
@@ -36,11 +45,10 @@ async def _(event):
     except Exception as e:
         no_admin_privilege_message = await event.client.send_message(
             entity=event.chat_id,
-            message=f"""**Automatic AntiFlooder**
-@admin [User](tg://user?id={event.message.sender_id}) is flooding this chat.
-`{str(e)}`""",
+            message=f"**Automatic AntiFlooder**\x1f@admin [User](tg://user?id={event.message.sender_id}) is flooding this chat.\x1f`{e}`",
             reply_to=event.message.id,
         )
+
         await asyncio.sleep(4)
         await no_admin_privilege_message.edit(
             "This is useless SPAM dude. Stop this, enjoy the chat buddy "

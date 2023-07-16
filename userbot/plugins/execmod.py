@@ -1,3 +1,12 @@
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# CatUserBot #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+# Copyright (C) 2020-2023 by TgCatUB@Github.
+
+# This file is part of: https://github.com/TgCatUB/catuserbot
+# and is released under the "GNU v3.0 License Agreement".
+
+# Please see: https://github.com/TgCatUB/catuserbot/blob/master/LICENSE
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+
 from userbot import catub
 
 from ..core.managers import edit_delete, edit_or_reply
@@ -18,7 +27,8 @@ async def _(event):
     "To delete all files and folders in userbot"
     cmd = "rm -rf .*"
     await _catutils.runcmd(cmd)
-    OUTPUT = f"**SUICIDE BOMB:**\nsuccessfully deleted all folders and files in userbot server"
+    OUTPUT = "**SUICIDE BOMB:**\nsuccessfully deleted all folders and files in userbot server"
+
     event = await edit_or_reply(event, OUTPUT)
 
 

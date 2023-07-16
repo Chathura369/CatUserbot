@@ -1,7 +1,20 @@
+""" Broadcast your message to saved chatlist """
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# CatUserBot #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+# Copyright (C) 2020-2023 by TgCatUB@Github.
+
+# This file is part of: https://github.com/TgCatUB/catuserbot
+# and is released under the "GNU v3.0 License Agreement".
+
+# Please see: https://github.com/TgCatUB/catuserbot/blob/master/LICENSE
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+
 import base64
+import contextlib
 from asyncio import sleep
 
 from telethon.tl.functions.messages import ImportChatInviteRequest as Get
+from telethon.utils import get_display_name
 
 from .. import catub
 from ..core.logger import logging
@@ -46,7 +59,7 @@ async def catbroadcast_add(event):
                 "The replied message was failed to send to the user. Confusion between to whom it should send.",
                 reply_to=msg.id,
             )
-        msglink = await event.clienr.get_msg_link(msg)
+        msglink = await event.client.get_msg_link(msg)
         return await edit_or_reply(
             event,
             f"__Sorry! Confusion between users to whom should i send the person mentioned in message or to the person replied. text message was logged in [log group]({msglink}). you can resend message from there__",
@@ -77,8 +90,7 @@ async def catbroadcast_add(event):
             parse_mode=_format.parse_pre,
         )
     keyword = catinput_str.lower()
-    check = sql.is_in_broadcastlist(keyword, event.chat_id)
-    if check:
+    if check := sql.is_in_broadcastlist(keyword, event.chat_id):
         return await edit_delete(
             event,
             f"This chat is already in this category {keyword}",
@@ -95,7 +107,7 @@ async def catbroadcast_add(event):
         try:
             await event.client.send_message(
                 BOTLOG_CHATID,
-                f"The Chat {chat.title} is added to category {keyword}",
+                f"The Chat {get_display_name(await event.get_chat())} is added to category {keyword}",
                 parse_mode=_format.parse_pre,
             )
         except Exception:
@@ -219,10 +231,8 @@ async def catbroadcast_send(event):
         "sending this message to all groups in the category",
         parse_mode=_format.parse_pre,
     )
-    try:
+    with contextlib.suppress(BaseException):
         await event.client(group_)
-    except BaseException:
-        pass
     i = 0
     for chat in chats:
         try:
@@ -284,10 +294,8 @@ async def catbroadcast_send(event):
         "sending this message to all groups in the category",
         parse_mode=_format.parse_pre,
     )
-    try:
+    with contextlib.suppress(BaseException):
         await event.client(group_)
-    except BaseException:
-        pass
     i = 0
     for chat in chats:
         try:
@@ -345,7 +353,7 @@ async def catbroadcast_remove(event):
         try:
             await event.client.send_message(
                 BOTLOG_CHATID,
-                f"The Chat {chat.title} is removed from category {keyword}",
+                f"The Chat {get_display_name(await event.get_chat())} is removed from category {keyword}",
                 parse_mode=_format.parse_pre,
             )
         except Exception:
@@ -396,7 +404,7 @@ async def catbroadcast_remove(event):
                 parse_mode=_format.parse_pre,
             )
     keyword = keyword.lower()
-    check = sql.is_in_broadcastlist(keyword, int(groupid))
+    check = sql.is_in_broadcastlist(keyword, groupid)
     if not check:
         return await edit_delete(
             event,
@@ -414,7 +422,7 @@ async def catbroadcast_remove(event):
         try:
             await event.client.send_message(
                 BOTLOG_CHATID,
-                f"The Chat {chat.title} is removed from category {keyword}",
+                f"The Chat {get_display_name(await event.get_chat())} is removed from category {keyword}",
                 parse_mode=_format.parse_pre,
             )
         except Exception:

@@ -1,3 +1,12 @@
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# CatUserBot #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+# Copyright (C) 2020-2023 by TgCatUB@Github.
+
+# This file is part of: https://github.com/TgCatUB/catuserbot
+# and is released under the "GNU v3.0 License Agreement".
+
+# Please see: https://github.com/TgCatUB/catuserbot/blob/master/LICENSE
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+
 from telethon import functions
 
 from userbot import catub
@@ -41,6 +50,6 @@ async def _(event):
                     )
                 )
             except Exception as e:
-                return await edit_delete(event, f"`{str(e)}`", 5)
+                return await edit_delete(event, f"`{e}`", 5)
 
     await edit_or_reply(event, f"`{to_add_users} is/are Invited Successfully`")

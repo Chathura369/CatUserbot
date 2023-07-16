@@ -1,3 +1,12 @@
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# CatUserBot #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+# Copyright (C) 2020-2023 by TgCatUB@Github.
+
+# This file is part of: https://github.com/TgCatUB/catuserbot
+# and is released under the "GNU v3.0 License Agreement".
+
+# Please see: https://github.com/TgCatUB/catuserbot/blob/master/LICENSE
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+
 import os
 
 from telethon.errors.rpcerrorlist import UsernameOccupiedError
@@ -44,7 +53,7 @@ async def _(event):
         await event.client(functions.account.UpdateProfileRequest(about=bio))
         await edit_delete(event, "`successfully changed my profile bio`")
     except Exception as e:
-        await edit_or_reply(event, f"**Error:**\n`{str(e)}`")
+        await edit_or_reply(event, f"**Error:**\n`{e}`")
 
 
 @catub.cat_cmd(
@@ -70,7 +79,7 @@ async def _(event):
         )
         await edit_delete(event, "`My name was changed successfully`")
     except Exception as e:
-        await edit_or_reply(event, f"**Error:**\n`{str(e)}`")
+        await edit_or_reply(event, f"**Error:**\n`{e}`")
 
 
 @catub.cat_cmd(
@@ -118,7 +127,7 @@ async def _(event):
                     )
                 )
             except Exception as e:
-                await catevent.edit(f"**Error:**\n`{str(e)}`")
+                await catevent.edit(f"**Error:**\n`{e}`")
             else:
                 await edit_or_reply(
                     catevent, "`My profile picture was successfully changed`"
@@ -137,16 +146,16 @@ async def _(event):
         "usage": "{tr}pusername <new username>",
     },
 )
-async def update_username(username):
+async def update_username(event):
     """For .username command, set a new username in Telegram."""
-    newusername = username.pattern_match.group(1)
+    newusername = event.pattern_match.group(1)
     try:
-        await username.client(UpdateUsernameRequest(newusername))
+        await event.client(UpdateUsernameRequest(newusername))
         await edit_delete(event, USERNAME_SUCCESS)
     except UsernameOccupiedError:
         await edit_or_reply(event, USERNAME_TAKEN)
     except Exception as e:
-        await edit_or_reply(event, f"**Error:**\n`{str(e)}`")
+        await edit_or_reply(event, f"**Error:**\n`{e}`")
 
 
 @catub.cat_cmd(
@@ -239,8 +248,7 @@ async def remove_profilepic(delpfp):
 async def _(event):
     "To list all public channels and groups."
     result = await event.client(GetAdminedPublicChannelsRequest())
-    output_str = "**Your current reserved usernames are:**\n"
-    output_str += "".join(
+    output_str = "**Your current reserved usernames are:**\n" + "".join(
         f" - {channel_obj.title} @{channel_obj.username} \n"
         for channel_obj in result.chats
     )

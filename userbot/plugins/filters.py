@@ -1,6 +1,8 @@
 # ported from paperplaneExtended by avinashreddy3108 for media support
 import re
 
+from telethon.utils import get_display_name
+
 from userbot import catub
 
 from ..core.managers import edit_or_reply
@@ -26,7 +28,7 @@ async def filter_incoming_handler(event):  # sourcery no-metrics
     a_user = await event.get_sender()
     chat = await event.get_chat()
     me = await event.client.get_me()
-    title = chat.title or "this chat"
+    title = get_display_name(await event.get_chat()) or "this chat"
     participants = await event.client.get_participants(chat)
     count = len(participants)
     mention = f"[{a_user.first_name}](tg://user?id={a_user.id})"
@@ -41,7 +43,7 @@ async def filter_incoming_handler(event):  # sourcery no-metrics
     my_fullname = f"{my_first} {my_last}" if my_last else my_first
     my_username = f"@{me.username}" if me.username else my_mention
     for trigger in filters:
-        pattern = r"( |^|[^\w])" + re.escape(trigger.keyword) + r"( |$|[^\w])"
+        pattern = f"( |^|[^\\w]){re.escape(trigger.keyword)}( |$|[^\\w])"
         if re.search(pattern, name, flags=re.IGNORECASE):
             file_media = None
             filter_msg = None
@@ -157,7 +159,7 @@ async def on_snip_list(event):
     for filt in filters:
         if OUT_STR == "There are no filters in this chat.":
             OUT_STR = "Active filters in this chat:\n"
-        OUT_STR += "👉 `{}`\n".format(filt.keyword)
+        OUT_STR += f"👉 `{filt.keyword}`\n"
     await edit_or_reply(
         event,
         OUT_STR,
@@ -178,9 +180,9 @@ async def remove_a_filter(event):
     "Stops the specified keyword."
     filt = event.pattern_match.group(1)
     if not remove_filter(event.chat_id, filt):
-        await event.edit("Filter` {} `doesn't exist.".format(filt))
+        await event.edit(f"Filter` {filt} `doesn't exist.")
     else:
-        await event.edit("Filter `{} `was deleted successfully".format(filt))
+        await event.edit(f"Filter `{filt} `was deleted successfully")
 
 
 @catub.cat_cmd(
@@ -193,9 +195,8 @@ async def remove_a_filter(event):
 )
 async def on_all_snip_delete(event):
     "To delete all filters in that group."
-    filters = get_filters(event.chat_id)
-    if filters:
+    if filters := get_filters(event.chat_id):
         remove_all_filters(event.chat_id)
-        await edit_or_reply(event, f"filters in current chat deleted successfully")
+        await edit_or_reply(event, "filters in current chat deleted successfully")
     else:
-        await edit_or_reply(event, f"There are no filters in this group")
+        await edit_or_reply(event, "There are no filters in this group")

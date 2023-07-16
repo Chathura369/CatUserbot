@@ -1,3 +1,12 @@
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# CatUserBot #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+# Copyright (C) 2020-2023 by TgCatUB@Github.
+
+# This file is part of: https://github.com/TgCatUB/catuserbot
+# and is released under the "GNU v3.0 License Agreement".
+
+# Please see: https://github.com/TgCatUB/catuserbot/blob/master/LICENSE
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+
 from telethon.utils import pack_bot_file_id
 
 from userbot import catub
@@ -22,12 +31,11 @@ LOGS = logging.getLogger(__name__)
 )
 async def _(event):
     "To get id of the group or user."
-    input_str = event.pattern_match.group(2)
-    if input_str:
+    if input_str := event.pattern_match.group(2):
         try:
             p = await event.client.get_entity(input_str)
         except Exception as e:
-            return await edit_delete(event, f"`{str(e)}`", 5)
+            return await edit_delete(event, f"`{e}`", 5)
         try:
             if p.first_name:
                 return await edit_or_reply(
@@ -48,12 +56,14 @@ async def _(event):
             bot_api_file_id = pack_bot_file_id(r_msg.media)
             await edit_or_reply(
                 event,
-                f"**Current Chat ID : **`{str(event.chat_id)}`\n**From User ID: **`{str(r_msg.sender_id)}`\n**Media File ID: **`{bot_api_file_id}`",
+                f"**Current Chat ID : **`{event.chat_id}`\n**From User ID: **`{r_msg.sender_id}`\n**Media File ID: **`{bot_api_file_id}`",
             )
+
         else:
             await edit_or_reply(
                 event,
-                f"**Current Chat ID : **`{str(event.chat_id)}`\n**From User ID: **`{str(r_msg.sender_id)}`",
+                f"**Current Chat ID : **`{event.chat_id}`\n**From User ID: **`{r_msg.sender_id}`",
             )
+
     else:
-        await edit_or_reply(event, f"**Current Chat ID : **`{str(event.chat_id)}`")
+        await edit_or_reply(event, f"**Current Chat ID : **`{event.chat_id}`")
