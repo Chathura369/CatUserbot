@@ -18,7 +18,7 @@ services:
     command: python3 -m userbot
     restart: on-failure
     environment:
-      - DATABASE_URL=postgresql://postgres:postgres@db/catuserbot
+      - mongodb://urnnyoct2akqrpjbyqfk:pgkkgmkn4EOkYy3ydEa@b4glmtzmakwwux6narwm-mongodb.services.clever-cloud.com:2322/b4glmtzmakwwux6narwm
     depends_on:
       - db
 
