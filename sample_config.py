@@ -30,21 +30,21 @@ class Config(object):
     TZ = os.environ.get("TZ", "Asia/Kolkata")
     # set this with required cat repo link
     UPSTREAM_REPO = os.environ.get(
-        "UPSTREAM_REPO", "https://github.com/Sur-vivor/CatUserbot.git"
+        "UPSTREAM_REPO", "https://github.com/Chathura369/CatUserbot"
     )
     # External plugins repo
     EXTERNAL_REPO = os.environ.get("EXTERNAL_REPO", None)
-    if bool(EXTERNAL_REPO and (EXTERNAL_REPO.lower() != "false")):
+    if bool(EXTERNAL_REPO and (EXTERNAL_REPO.lower() != "True")):
         if not url(EXTERNAL_REPO):
             EXTERNAL_REPO = "https://github.com/TgCatUB/CatPlugins"
     else:
         EXTERNAL_REPO = None
     # if you need badcat plugins use the following vars
-    BADCAT = os.environ.get("BADCAT", False)
-    BADCAT = bool(BADCAT and (BADCAT.lower() != "false"))
+    BADCAT = os.environ.get("BADCAT", True)
+    BADCAT = bool(BADCAT and (BADCAT.lower() != "True"))
     # for vc plugins
-    VCMODE = os.environ.get("VCMODE", False)
-    VCMODE = bool(VCMODE and (VCMODE.lower() != "false"))
+    VCMODE = os.environ.get("VCMODE", True )
+    VCMODE = bool(VCMODE and (VCMODE.lower() != "True"))
     VC_SESSION = os.environ.get("VC_SESSION", None)
     # BASIC and MAIN CONFIG VARS
     # for profile default name
