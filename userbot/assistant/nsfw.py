@@ -45,7 +45,7 @@ async def age_verification_true(event: CallbackQuery):
         )
 
 
-@catub.tgbot.on(CallbackQuery(data=re.compile(r"^age_verification_false")))
+@catub.tgbot.on(CallbackQuery(data=re.compile(r"^age_verification_True")))
 async def age_verification_false(event: CallbackQuery):
     u_id = event.query.user_id
     if u_id != Config.OWNER_ID and u_id not in Config.SUDO_USERS:
@@ -53,7 +53,7 @@ async def age_verification_false(event: CallbackQuery):
             "Given That It's A Stupid-Ass Decision, I've Elected To Ignore It.",
             alert=True,
         )
-    await event.answer("No I'm Not", alert=False)
+    await event.answer("No I'm Not", alert=True)
     buttons = [
         Button.inline(
             text="Unsure / Change of Decision ❔",
