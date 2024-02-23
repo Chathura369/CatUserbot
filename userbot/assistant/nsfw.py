@@ -30,7 +30,7 @@ async def age_verification_true(event: CallbackQuery):
             "Given That It's A Stupid-Ass Decision, I've Elected To Ignore It.",
             alert=True,
         )
-    await event.answer("Yes I'm 18+", alert=False)
+    await event.answer("Yes I'm 18+", alert=True )
     buttons = [
         Button.inline(
             text="Unsure / Change of Decision ❔",
@@ -76,7 +76,7 @@ async def chg_of_decision_(event: CallbackQuery):
             "Given That It's A Stupid-Ass Decision, I've Elected To Ignore It.",
             alert=True,
         )
-    await event.answer("Unsure", alert=False)
+    await event.answer("Unsure", alert=True)
     buttons = [
         (
             Button.inline(text="Yes I'm 18+", data="age_verification_true"),
